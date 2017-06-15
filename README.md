@@ -35,7 +35,7 @@ The structure of the repo is as follows;
                 
 ```
 
-## <version> format
+## version format
 
 ${major}.${minor}.${build_number}_${datestamp}
 
