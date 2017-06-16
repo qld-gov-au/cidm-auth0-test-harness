@@ -7,27 +7,27 @@ The structure of the repo is as follows;
 ▾ □ https://qld-gov-au.github.io/cidm-auth0-test-harness
     ▾ □ <customer>=OSSIO
         ▾ □ <product>=Wrapper
-            ▾ □ <version>=master
+            ▾ □ <version>=latest
                 - □ <environent>=DEV
                 - □ <environent>=TST
                 - □ <environent>=UAT
                 - □ <environent>=PRD
         ▾ □ <product>=Neo
-            ▾ □ <version>=master
+            ▾ □ <version>=latest
                 - □ <environent>=DEV
                 - □ <environent>=TST
                 - □ <environent>=UAT
                 - □ <environent>=PRD
     ▾ □ <customer>=MyAccount
         ▾ □ <product>=Wrapper
-            ▾ □ <version>=master
+            ▾ □ <version>=latest
                 - □ <environent>=DEV
                 - □ <environent>=TST
                 - □ <environent>=UAT
                 - □ <environent>=PRD
     ▾ □ <customer>=Seniors
         ▾ □ <product>=Wrapper
-            ▾ □ <version>=master
+            ▾ □ <version>=latest
                 - □ <environent>=DEV
                 - □ <environent>=TST
                 - □ <environent>=UAT
@@ -46,7 +46,7 @@ date +%Y%m%dT%H%M%S
 
 Examples;
 ```
-master
+latest
 0.0.1_20170615T122400
 0.0.2_20170615T122400
 ```
