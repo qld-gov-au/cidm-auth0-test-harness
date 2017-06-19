@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CIDM NEO Resources</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
+
+    <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-neo.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-profile.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/swe3-override.css"></link>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
+    <!-- The Auth0 Lock widget needs to be loaded at the baes level -->
+    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/lock/latest/lock.js"></script>
+    <!-- used to validate the JWT -->
+    <script src="https://cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
+
+    <!-- To load the dependencies we use http://requirejs.org -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+    
+    <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
+
+    <!-- load the test functions, not part of a normal CIDM-NEO install -->
+    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/js/cidm-test.js"></script>
+
+  </head>
+  <body>
+
+    <script type="text/javascript">
+    
+//====================================================================================================
+// load the cidm-loader that will in turn pull in the depenencies
+
+requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/js/cidm-loader.js'], function() {
+    
+    //____________________________________________________________________________________________________
+    // now use the cidm-neo widget and optional cidm-utils to show the profile
+    
+    requirejs(['cidm-neo', 'cidm-utils'], function(neo, utils) {
+        
+        //____________________________________________________________________________________________________
+        // please note that $ jquery is loaded as part of the cidm-loader dependencies
+
+        $(document).ready(function() {
+
+            //____________________________________________________________________________________________________
+            // setup login configuration
+
+            // wrapped settings
+            
+            $('#wrapped>input').checkboxradio();
+
+            var wrapped = localStorage.getItem('wrapped');
+            //console.log('wrapped=',wrapped);
+            if (wrapped == 'false') {
+                wrapped = false;
+                $('#isNEO').click();
+            }
+            else {
+                wrapped = true;
+                $('#isWrapped').click();
+            }
+            localStorage.setItem('wrapped',''+wrapped);
+
+            $('#wrapped').change(function() {
+                wrapped = $('#isWrapped:checked').length > 0;
+                console.log('wrapped->', wrapped);
+                $.qgcidm.config.wrapped = wrapped;
+                localStorage.setItem('wrapped',''+wrapped);
+                // call initialize to set the widget type
+                $.qgcidm.initialise();
+            });
+            
+
+            // the level persisted to local storage
+            
+            $('#level>input').checkboxradio();
+
+            var level = localStorage.getItem('level');
+            //console.log('level=',level);
+            if (level != null && (level == 'Level_1' || level == 'Level_2')) {
+                $('#'+level).click();
+            }
+            else {
+                level = 'Level_1';
+                $('#Level_1').click();
+            }
+            localStorage.setItem('level', level);
+
+            $('#level').change(function() {
+                level = $('#level>input:checked').attr('id');
+                console.log('level->', level);
+                $.qgcidm.config.level = level;
+                // call initialise to set the level required
+                localStorage.setItem('level',level);
+                $.qgcidm.initialise();
+            });
+            
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //____________________________________________________________________________________________________
+            // this is the way that you would initialize the QGCIDM NEO widget
+            
+            $.qgcidm.initialise({
+                home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest',
+                domain: 'uat.qld-gov-dev.auth0.com',
+                clientID: 'arO14Dd1XFjWLO8OUFctP9qTBAa7yZbN',
+                webtaskHome: 'webtask.qld-gov-dev.auth0.com/api/run/uat',
+                level: level,
+                wrapped: wrapped,
+                returnTo: window.location.href,
+                hub: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/latest/UAT/hub.html',
+                faq: "https://uat.identity.qld.gov.au/help/faq.html",
+                about: "QGov - CIDM NEO - Release=latest",
+                myaccount: "https://www.myaccount.staging-services.qld.gov.au"
+            });
+
+            //____________________________________________________________________________________________________
+            // this step tags the avatar div tag with the login/logout and name/icon widget
+
+            $('#avatar').avatar(); // make the id=avatar an avatar for the login widget
+
+            //====================================================================================================
+            // this step enables the profile widget and renders the widget
+
+            $.qgcidm.enable();
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        // this section below is for testing purposes and not part of the usual NEO install
+        
+            // the update container is for testing purposes only
+
+            $('#updateContainer').hide();
+            $('#squishme').accordion({
+                heightStyle: "content",
+                collapsible: true,
+                active: false
+            });
+
+            //____________________________________________________________________________________________________
+            //
+
+            //____________________________________________________________________________________________________
+            // this is a test function to allow the testor to set the level
+
+            //====================================================================================================
+            // 
+
+            $('#changePwd').attr('href','https://' + $.qgcidm.config.webtaskHome + '/ChangePassword/forgot?bk=' + window.location.href);
+
+            $('#squishme').find('button').button();
+            $('#squishme').find('input[type=button]').button();
+            
+            // for testing purposes this stepup button can be used to force a step up login sequence
+            $('#stepup').click(function(e) {
+                e.preventDefault();
+                $('#Level_2').click();
+                if ($.qgcidm.config.wrapped) {
+                    window.location.href = $.qgcidm.getLoginURL();
+                }
+                else {
+                    $.qgcidm._lock.show();
+                }
+            });
+
+            //====================================================================================================
+            // An optional capabilitiy the ability to hook into the onLogin or onLogout callback chain
+
+            $('#profile')
+                .onLogin(function(me) {
+                    // the #profile tag holds a view of the users profile == me
+                    $(me).show();
+                    // remove any tags inside the current profile
+                    $('#profile').find('*').remove();
+                    // populate the profile div tag with the QGCIDM user profile
+                    $('#profile').expando($.qgcidm.profile);
+                    $('#updateContainer').show();
+                })
+                .onLogout(function(me) {
+                    // hide the profile div tag
+                    $(me).hide();
+                    $('#updateContainer').hide();
+                });
+            
+            // if the user is already logged in this step will show their profile
+            $('#profile').find('*').remove();
+            $('#profile').expando($.qgcidm.profile);
+        });
+
+        //====================================================================================================
+        // end of test section
+        
+    });
+});    
+
+    </script>
+
+
+    <!-- ==================================================================================================== -->
+    <h1>The Profile Widget avatar</h1>
+    <p>The profile below in gray is the widget that is embedded in an agency site. It is managed by CIDM NEO and populated dynamically</p>
+    <!-- this div tag will contain the login/logout widget when loaded with jQuery -->
+    <div id="avatar" style="text-align:right;width:100%;background:gray;"></div>
+
+    <!-- ==================================================================================================== -->
+
+    <br/>
+    <br/>
+    <hr/>
+
+    <div class="widget" style="width:100%;">
+      <h1>Login Configuration</h1>
+      
+      <!-- select drop down list to select the Wrapped widget or NEO widget -->
+      <fieldset id="wrapped" style="display:inline-block;">
+        <legend>Login Type</legend>
+        <label for="isWrapped">Wrapped</label>
+        <input type="radio" name="wrapped" id="isWrapped"></input>
+        <label for="isNEO">NEO</label>
+        <input type="radio" name="wrapped" id="isNEO"></input>
+      </fieldset>
+
+      <!-- select drop down list to allow the tester to select which level they want to use -->
+      <fieldset id="level" style="display:inline-block;">
+        <legend>Choose the Level</legend>
+        <label for="Level_1">Level 1</label>
+        <input type="radio" name="level" id="Level_1"></input>
+        <label for="Level_2">Level 2</label>
+        <input type="radio" name="level" id="Level_2"></input>
+      </fieldset>
+    
+    </div>
+
+    <div id="updateContainer">
+      <h1>Test Harness Functions</h1>
+      <p>The following services are for testing purposes only, they are not shown to end users.</p>
+
+      <div id="squishme">
+        <h2>Step Up</h2>
+        <div>
+          <!-- button to force a step up login -->
+          <button id="stepup">Step Up</button>
+        </div>
+        
+        <h2>Update Mobile Number</h2>
+        <!-- update mobile number service -->
+        <div>
+          <span>New Mobile ? </span>
+          <input type="text" id="mobile" maxlength="10" />
+          <input type="button" onclick="changeMobile()" value="update" />
+        </div>
+        
+        <h2>Change Password</h2>
+        <!-- change password feature -->
+        <div>
+          <a id="changePwd" target="_blank">Change Password</a>
+        </div>
+        
+        <h2>Change Username/email</h2>
+        <div>
+          <span>Update email : </span>
+          <input type="text" id="emailAddr" placeholder="Email"/>
+          <input type="password" id="pwd" placeholder="password"/>
+          <input type="button" onclick="changeEmail()" value="update email" />
+        </div>
+        
+        <h2>Delete User</h2>
+        <div>
+          <input type="text" id="deleteUser" placeholder="Email of a user to delete"/>
+          <input type="button" onclick="deleteUser()" value="Delete User" />
+        </div>
+
+      </div>
+
+    </div>
+
+    <hr/>
+    <h1>Current User Profile</h1>
+    <p>When the user is logged in their profile is availble in the browser cache. It is displayed here for diagnostic purposes only.</p>
+    <!-- this div tag will hold the users profile when they are logged in -->
+    <div id="profile"></div>
+    <div id="dialog" title=" About NEO" hidden="hidden">
+      <p><a href="https://www.qld.gov.au/dsiti/" target="_blank">Help link</a></p>
+    </div>
+
+  </body>
+
+</html>
