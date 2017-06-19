@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>SAML Login</title>
+    <link rel="shortcut icon" href="https://www.confirm.com.au/citecConfirm/images/favicon.ico" />
+
+    <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-neo.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-profile.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/swe3-override.css"></link>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
+    <!-- The Auth0 Lock widget needs to be loaded at the baes level -->
+    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/lock/latest/lock.js"></script>
+
+    <!-- used to validate the JWT -->
+    <script src="https://cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
+
+    <!-- To load the dependencies we use http://requirejs.org -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+    <!-- this script uses the cidm-neo extensions to add auth0 login capabilities to buttons -->
+
+    <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
+
+    </head>
+    <body>
+
+    <script type="text/javascript">
+
+
+        //====================================================================================================
+        // load the cidm-loader that will in turn pull in the depenencies
+
+        requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/js/cidm-loader.js'], function() {
+
+            //____________________________________________________________________________________________________
+            // now use the cidm-neo widget and optional cidm-utils to show the profile
+
+            requirejs(['cidm-neo', 'cidm-utils'], function(neo, utils) {
+
+                //____________________________________________________________________________________________________
+                // please note that $ jquery is loaded as part of the cidm-loader dependencies
+
+                $(document).ready(function() {
+
+                    //____________________________________________________________________________________________________
+                    // this is the way that you would initialize the QGCIDM Wrapped Widget
+
+                    $.qgcidm.initialise({
+                        home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest',
+                        domain: 'uat.qld-gov-dev.auth0.com',
+                        clientID: 'RxZNvHNRT9z3rvZpKW0Y0xKgHrDZWuWT',
+                        webtaskHome: 'webtask.qld-gov-dev.auth0.com/ap1/run/dev',
+                        level: 'Level_2',
+                        wrapped: true,
+                        hub: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/MyAccount/MyAccount-Wrapped/profile/latest/UAT/hub.html',
+                        returnTo: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/MyAccount/MyAccount-Wrapped/profile/latest/UAT/callback.html',
+                        faq: "https://uat.identity.qld.gov.au/help/faq.html",
+                        about: "QGov - CIDM NEO - Release=latest",
+                        myaccount: "https://www.myaccount.test-services.qld.au"
+                    });
+
+                    //____________________________________________________________________________________________________
+                    // this step tags the avatar div tag with the login/logout and name/icon widget
+
+
+                    $('#avatar')
+                        .avatar() // make the id=avatar an avatar for the login widget
+                        .onLogin(function() {
+                            // do something on login
+                        })
+                        .onLogout(function() {
+                            // do something on logout
+                        })
+                    ; 
+                    
+                    //====================================================================================================
+                    // this step enables the profile widget and renders the widget
+
+                    $.qgcidm.enable();
+
+                });
+            });
+          
+      });
+    </script>
+    
+    <!-- end of Auth0 goodies -->
+    
+
+    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+    <div id="avatar" style="text-align:right;width:100%;background:gray;"></div>
+
+    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+  </body>
+</html>
