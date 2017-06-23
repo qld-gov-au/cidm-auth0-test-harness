@@ -7,8 +7,8 @@ version=latest
 
 |name|value|
 | --- | --- |
-|domain|None.qld-gov-dev.auth0.com|
-|client_id|None|
+|domain|dev.qld-gov-dev.auth0.com|
+|client_id|976MeFlfvvWlTvyKm2cVgOv5qxwNbEDK|
 |url|https://qld-gov-au.github.io/cidm-auth0-test-harness/Customer/Client/profile/latest/DEV|
 
 
@@ -16,6 +16,6 @@ version=latest
 
 |name|value|
 | --- | --- |
-|domain|None.qld-gov-dev.auth0.com|
-|client_id|None|
+|domain|dev.qld-gov-dev.auth0.com|
+|client_id|6lhCBo4MuAcIRCLEoRdTC4cUeFXQN2qP|
 
