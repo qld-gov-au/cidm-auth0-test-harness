@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>My Agency</title>
-    
+
     <!-- feeling patrioitic -->
     <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
 
@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
 
     <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
-    
+
   </head>
   <body>
 
@@ -51,7 +51,7 @@
                         webtaskHome: 'webtask.qld-gov-dev.auth0.com/api/run/uat',
                         level: 'Level_2',
                         wrapped: true,
-                        hub: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/latest/UAT/hub.html',
+                        hub: 'https://sso-uat.identity.staging-services.qld.gov.au/hub.html',
                         returnTo: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/latest/UAT/callback.html',
                         faq: "https://uat.identity.qld.gov.au/help/faq.html",
                         about: "QGov - CIDM NEO - Release=latest",
@@ -69,8 +69,8 @@
                         .onLogout(function() {
                             // do something on logout
                         })
-                    ; 
-                    
+                    ;
+
                     //====================================================================================================
                     // this step enables the profile widget and renders the widget
 
@@ -78,20 +78,20 @@
 
                 });
             });
-          
+
       });
 
     <!-- end of Auth0 goodies -->
     </script>
-    
-    
+
+
 
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
     <table border="1">
       <tr>
         <th style="background:gray;">
-          <!-- this is the div tag that will be populated with the login widget --> 
+          <!-- this is the div tag that will be populated with the login widget -->
           <div id="avatar" style="text-align:right;width:100%;"></div>
         </th>
       </tr>
@@ -114,7 +114,7 @@
         </td>
       </tr>
     </table>
-    
+
     <!-- ---------------------------------------------------------------------------------------------------- -->
 
   </body>
