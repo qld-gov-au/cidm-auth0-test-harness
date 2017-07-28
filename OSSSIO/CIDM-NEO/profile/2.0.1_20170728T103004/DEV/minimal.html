@@ -6,9 +6,9 @@
     <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
 
     <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/cidm-neo.css"></link>
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/cidm-profile.css"></link>
-    <link rel="stylesheet" type="text/css" href="http://localhost:8080/css/swe3-override.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-neo.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-profile.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/swe3-override.css"></link>
 
     <!-- The CIDM-NEO widget uses these base Auth0 resources -->
     <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
@@ -29,7 +29,7 @@
         //====================================================================================================
         // load the cidm-loader that will in turn pull in the dependencies
 
-        requirejs(['http://localhost:8080/js/cidm-loader.js'], function() {
+        requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/js/cidm-loader.js'], function() {
 
             //____________________________________________________________________________________________________
             // now use the cidm-neo widget and optional cidm-utils to show the profile
@@ -45,12 +45,12 @@
                     // this is the way that you would initialize the QGCIDM Wrapped Widget
 
                     $.qgcidm.initialise({
-                        home: 'http://localhost:8080',
+                        home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest',
                         domain: 'dev.qld-gov-dev.auth0.com',
-                        clientID: 'Ku1lxMkBQWcCDLquCPC5zosW1vhRMkoZ',
+                        clientID: 'QtTiinkckL5CN5Er2obORxGXVz5DmJOR',
                         level: 'Level_2',
-                        hub: 'https://sso-dev.identity.staging-services.qld.gov.au/hub.html',
-                        returnTo: 'http://localhost:8080/callback.html',
+                        hub: 'https://sso-tst.identity.staging-services.qld.gov.au/hub.html',
+                        returnTo: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/2.0.1_20170728T103004/DEV/callback.html',
                         faq: "https://uat.identity.qld.gov.au/help/faq.html",
                         about: "QGov - CIDM NEO - Release=latest",
                         myaccount: "https://www.myaccount.test-services.qld.au"

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CIDM Wrapped Widget Resources</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
+
+    <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-neo.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/cidm-profile.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/css/swe3-override.css"></link>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
+
+    <!-- To load the dependencies we use http://requirejs.org -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+
+    <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
+
+  </head>
+  <body>
+
+    <script type="text/javascript">
+
+//====================================================================================================
+// load the cidm-loader that will in turn pull in the depenencies
+
+requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest/js/cidm-loader.js'], function() {
+
+    //____________________________________________________________________________________________________
+    // now use the cidm-neo widget and optional cidm-utils to show the profile
+
+    requirejs(['cidm-neo', 'cidm-utils', 'es6-promise'], function(neo, utils, es6Promise) {
+
+        //____________________________________________________________________________________________________
+        // please note that $ jquery is loaded as part of the cidm-loader dependencies
+
+        $(document).ready(function() {
+
+            //____________________________________________________________________________________________________
+            // setup login configuration
+
+            // the level persisted to local storage
+
+            $('#level>input').checkboxradio();
+
+            var level = localStorage.getItem('level');
+            //console.log('level=',level);
+            if (level != null && (level == 'Level_1' || level == 'Level_2')) {
+                $('#'+level).click();
+            }
+            else {
+                level = 'Level_1';
+                $('#Level_1').click();
+            }
+            localStorage.setItem('level', level);
+
+            $('#level').change(function() {
+                level = $('#level>input:checked').attr('id');
+                console.log('level->', level);
+                $.qgcidm.config.level = level;
+                // call initialise to set the level required
+                localStorage.setItem('level',level);
+                $.qgcidm.initialise();
+            });
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //____________________________________________________________________________________________________
+            // this is the way that you would initialize the QGCIDM NEO widget
+
+            $.qgcidm.initialise({
+                home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest',
+                domain: 'dev.qld-gov-dev.auth0.com',
+                clientID: 'QtTiinkckL5CN5Er2obORxGXVz5DmJOR',
+                level: level,
+                hub: 'https://sso-tst.identity.staging-services.qld.gov.au/hub.html',
+                returnTo: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/2.0.1_20170728T103004/DEV/callback.html',
+                faq: "https://identity.qld.gov.au/help/faq.html",
+                about: "https://www.my.qld.gov.au/intro/index.html",
+                myaccount: "https://www.my.qld.gov.au"
+            });
+
+            //____________________________________________________________________________________________________
+            // this step tags the avatar div tag with the login/logout and name/icon widget
+
+            $('#avatar').avatar(); // make the id=avatar an avatar for the login widget
+
+            //====================================================================================================
+            // this step enables the profile widget and renders the widget
+
+            $.qgcidm.enable();
+
+            $('#profile').expando($.qgcidm.profile);
+
+
+        });
+    });
+});
+
+    </script>
+
+
+    <!-- ==================================================================================================== -->
+    <h1>The Profile Widget avatar</h1>
+    <p>The profile below in gray is the widget that is embedded in an agency site. It is managed by CIDM NEO and populated dynamically</p>
+    <!-- this div tag will contain the login/logout widget when loaded with jQuery -->
+    <div id="avatar" style="text-align:right;width:100%;background:gray;"></div>
+
+    <!-- ==================================================================================================== -->
+
+    <br/>
+    <br/>
+    <hr/>
+
+    <div class="widget" style="width:100%;">
+      <h1>Login Configuration</h1>
+
+      <!-- select drop down list to allow the tester to select which level they want to use -->
+      <fieldset id="level" style="display:inline-block;">
+        <legend>Choose the Level</legend>
+        <label for="Level_1">Level 1</label>
+        <input type="radio" name="level" id="Level_1"></input>
+        <label for="Level_2">Level 2</label>
+        <input type="radio" name="level" id="Level_2"></input>
+      </fieldset>
+
+    </div>
+
+    <hr/>
+    <h1>Current User Profile</h1>
+    <p>When the user is logged in their profile is availble in the browser cache. It is displayed here for diagnostic purposes only.</p>
+    <!-- this div tag will hold the users profile when they are logged in -->
+    <div id="profile"></div>
+    <div id="dialog" title=" About NEO" hidden="hidden">
+      <p><a href="https://www.qld.gov.au/dsiti/" target="_blank">Help link</a></p>
+    </div>
+
+  </body>
+
+</html>
