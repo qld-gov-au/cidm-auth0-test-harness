@@ -14,8 +14,6 @@
     <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.0.1_20170728T103004/css/swe3-override.css"></link>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
-
     <!-- To load the dependencies we use http://requirejs.org -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
 
@@ -90,13 +88,20 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.0.1_201
             // this step tags the avatar div tag with the login/logout and name/icon widget
 
             $('#avatar').avatar(); // make the id=avatar an avatar for the login widget
-
+            $('#avatar')
+                .onLogin(function() {
+                    $('#profile').show();
+                    $('#profile').expando($.qgcidm.profile);
+                })
+                .onLogout(function() {
+                    $('#profile').hide();
+                })
+            ;
             //====================================================================================================
             // this step enables the profile widget and renders the widget
 
             $.qgcidm.enable();
 
-            $('#profile').expando($.qgcidm.profile);
 
 
         });
