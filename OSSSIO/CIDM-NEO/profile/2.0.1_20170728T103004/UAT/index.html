@@ -90,13 +90,20 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.0.1_201
             // this step tags the avatar div tag with the login/logout and name/icon widget
 
             $('#avatar').avatar(); // make the id=avatar an avatar for the login widget
-
+            $('#avatar')
+                .onLogin(function() {
+                    $('#profile').show();
+                    $('#profile').expando($.qgcidm.profile);
+                })
+                .onLogout(function() {
+                    $('#profile').hide();
+                })
+            ;
             //====================================================================================================
             // this step enables the profile widget and renders the widget
 
             $.qgcidm.enable();
 
-            $('#profile').expando($.qgcidm.profile);
 
 
         });
