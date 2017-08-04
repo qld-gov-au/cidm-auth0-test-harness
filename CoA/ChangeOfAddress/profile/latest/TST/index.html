@@ -11,7 +11,7 @@
 
     <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
     <!-- The Auth0 Lock widget needs to be loaded at the baes level -->
-    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/lock/latest/lock.js"></script>
+    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/lock/1.0.1_20170801T112657/lock.js"></script>
 
     <!-- used to validate the JWT -->
     <script src="https://cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
@@ -47,13 +47,13 @@
                     // this is the way that you would initialize the QGCIDM Wrapped Widget
 
                     $.qgcidm.initialise({
-                        home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/latest',
+                        home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.1_20170801T120042',
                         domain: 'tst.qld-gov-dev.auth0.com',
                         clientID: 'T5iY6Fz2G4dUsrkHY32Abv8alTRDsodq',
                         webtaskHome: 'webtask.qld-gov-dev.auth0.com/ap1/run/dev',
                         level: 'Level_2',
                         wrapped: true,
-                        hub: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/CoA/ChangeOfAddress/profile/latest/TST/hub.html',
+                        hub: 'https://sso-tst.identity.staging-services.qld.gov.au/hub.html',
                         returnTo: 'https://qld-gov-au.github.io/cidm-auth0-test-harness/CoA/ChangeOfAddress/profile/latest/TST/callback.html',
                         faq: "https://uat.identity.qld.gov.au/help/faq.html",
                         about: "QGov - CIDM NEO - Release=latest",
