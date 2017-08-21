@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>My Agency</title>
+    
+    <!-- feeling patrioitic -->
+    <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
+
+    <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.2_20170810T152022/css/cidm-neo.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.2_20170810T152022/css/cidm-profile.css"></link>
+    <link rel="stylesheet" type="text/css" href="https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.2_20170810T152022/css/swe3-override.css"></link>
+
+    <!-- The CIDM-NEO widget uses these base Auth0 resources -->
+    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
+    <script src="https://cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
+    <script src="https://beta-static.qgov.net.au/assets/widget/CIDM/lock/1.0.2_20170810T143949/lock.min.js"></script>
+
+    <!-- To load the dependencies we use http://requirejs.org -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+
+    <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
+    
+  </head>
+  <body>
+
+    <script type="text/javascript">
+
+
+        //====================================================================================================
+        // load the cidm-loader that will in turn pull in the dependencies
+
+        requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.2_20170810T152022/js/cidm-loader.js'], function() {
+
+            //____________________________________________________________________________________________________
+            // now use the cidm-neo widget and optional cidm-utils to show the profile
+
+            requirejs(['cidm-neo', 'cidm-utils', 'es6-promise'], function(neo, utils, es6Promise) {
+
+                //____________________________________________________________________________________________________
+                // please note that the '$' symbol is jquery and is loaded as part of the cidm-loader dependencies
+
+                $(document).ready(function() {
+
+                    //____________________________________________________________________________________________________
+                    // this is the way that you would initialize the QGCIDM Wrapped Widget
+
+                    $.qgcidm.initialise({
+                        home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/3.0.2_20170810T152022',
+                        domain: 'uat.qld-gov-dev.auth0.com',
+                        clientID: 'z8R8wNIO49jeMUmWaDoVm6Uq4RjWBGcq',
+                        webtaskHome: 'webtask.qld-gov-dev.auth0.com/api/run/uat',
+                        level: 'Level_2',
+                        wrapped: true,
+                        hub: 'https://sso-uat.identity.staging-services.qld.gov.au/hub.html',
+                        returnTo: window.location.href.replace('index.html','callback.html'),
+                        faq: "https://uat.identity.qld.gov.au/help/faq.html",
+                        about: "QGov - CIDM NEO - Release=latest",
+                        myaccount: "https://www.myaccount.test-services.qld.au"
+                    });
+
+                    //____________________________________________________________________________________________________
+                    // the .avatar() function applies the login profile widget to the '#avatar' div tag with id='avatar'
+
+                    $('#avatar')
+                        .avatar() // make the id=avatar an avatar for the login widget
+                        .onLogin(function() {
+                            // do something on login
+                        })
+                        .onLogout(function() {
+                            // do something on logout
+                        })
+                    ; 
+                    
+                    //====================================================================================================
+                    // this step enables the profile widget and renders the widget
+
+                    $.qgcidm.enable();
+
+                });
+            });
+          
+      });
+
+    <!-- end of Auth0 goodies -->
+    </script>
+    
+    
+
+    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+    <table border="1">
+      <tr>
+        <th style="background:gray;">
+          <!-- this is the div tag that will be populated with the login widget --> 
+          <div id="avatar" style="text-align:right;width:100%;"></div>
+        </th>
+      </tr>
+      <tr>
+        <td>
+          <p>Lorem ipsum dolor sit amet, modo vidit nusquam at duo, dicant integre vocibus sea ad, duo no saepe graecis. Propriae gloriatur vis cu, diam vidit percipitur ne mei. Sea atqui accumsan suscipit ei, rebum dolorum nam at, ea eos alterum salutatus. Ea assum persecuti mea, ea possim perpetua ius.
+          </p>
+          <p>
+            Sed ad laoreet laboramus, quo at consul eirmod efficiantur. In qui illum eripuit nusquam, quod consul ei est. Cum no nostrud scaevola evertitur, pri molestie pertinacia te. Usu cu ponderum consequuntur, sit magna facilisi salutatus ad. Virtute nusquam est at, te sed insolens comprehensam. Has partiendo posidonium at, equidem fierent ea per.
+          </p>
+          <p>
+            Ne diam atqui vulputate vim, vel exerci contentiones id. Ea salutandi consetetur mea. Vim modus doming deserunt id, minim tritani luptatum ad pri. Vix te adhuc vitae nusquam, cu inani homero mei, etiam sadipscing ut has. Duo alii meliore ad, has nihil audire posidonium ut. Pri ea aeque nonumy praesent, ne nec ridens albucius.
+          </p>
+          <p>
+            Fugit delenit te pro, at vix porro nostro recteque. Pri ex sumo alia gloriatur, eam soleat ancillae adipisci te. Cu audiam iisque cotidieque eum, alia disputationi id his, volumus tibique deleniti vix ut. Illum dictas recteque est te, no vis mazim propriae tacimates. Eruditi gubergren signiferumque eos ne. Intellegat theophrastus interpretaris eu nam.
+          </p>
+          <p>
+            Ea vix autem omnes, ne quod atomorum eos. An alia accusata vim, has ad dicunt mentitum. Nostrum prodesset pri cu. Ne legere persequeris vel, te his choro eligendi.
+          </p>
+        </td>
+      </tr>
+    </table>
+    
+    <!-- ---------------------------------------------------------------------------------------------------- -->
+
+  </body>
+</html>
