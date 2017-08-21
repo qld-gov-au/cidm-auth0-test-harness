@@ -6,7 +6,7 @@ function changeMobile() {
             return;
         }
         var mobile = $('#mobile').val();
-        if ( $.qgcidm.isMobilePatternValid(mobile.trim()) ) {
+        if ( ! $.qgcidm.isMobilePatternValid(mobile.trim()) ) {
             alert('Please enter a valid number 10-digit number.');
         } else {
             var settings = {
