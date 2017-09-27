@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CIDM NEO Resources</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="qld-crest-on-top-2linestacked-b-w.png" />
+
+    <!-- cidm-neo.css introduces style changes to allow the avatar to display as a horizontal list -->
+    <link rel="stylesheet" type="text/css" href="https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355/css/cidm-neo.css">
+    <link rel="stylesheet" type="text/css" href="https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355/css/cidm-profile.css">
+    <link rel="stylesheet" type="text/css" href="https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355/css/swe3-override.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="https://cdn.auth0.com/js/auth0/8.3.0/auth0.min.js"></script>
+    <!-- The Auth0 Lock widget needs to be loaded at the baes level -->
+    <!-- script src="http://localhost:8083/lock.js"></script -->
+    <script src="https://test-static.qgov.net.au/assets/widget/CIDM/lock/1.0.3_20170926T151748/lock.min.js"></script>
+
+    <!-- used to validate the JWT -->
+    <script src="https://cdn.auth0.com/w2/auth0-7.6.1.min.js"></script>
+
+    <!-- To load the dependencies we use http://requirejs.org -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.min.js"></script>
+
+    <script src="https://use.fontawesome.com/d9e3b684a5.js"></script>
+
+    <!-- load the test functions, not part of a normal CIDM-NEO install -->
+    <script src="https://qld-gov-au.github.io/cidm-auth0-test-harness/OSSSIO/CIDM-NEO/profile/3.0.3_20170926T163355/TST/js/cidm-test.js"></script>
+
+  </head>
+  <body>
+
+    <script type="text/javascript">
+
+//====================================================================================================
+// load the cidm-loader that will in turn pull in the depenencies
+
+requirejs(['https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355/js/cidm-loader.js'], function() {
+
+    //____________________________________________________________________________________________________
+    // now use the cidm-neo widget and optional cidm-utils to show the profile
+
+    requirejs(['cidm-neo', 'cidm-utils', 'es6-promise'], function(neo, utils, es6Promise) {
+
+        //____________________________________________________________________________________________________
+        // please note that $ jquery is loaded as part of the cidm-loader dependencies
+
+        $(document).ready(function() {
+
+            $("#codeDiv").hide();
+            //____________________________________________________________________________________________________
+            // setup login configuration
+
+            // wrapped settings
+
+            $('#wrapped>input').checkboxradio();
+
+            var wrapped = localStorage.getItem('wrapped');
+            //console.log('wrapped=',wrapped);
+            if (wrapped == 'false') {
+                wrapped = false;
+                $('#isNEO').click();
+            }
+            else {
+                wrapped = true;
+                $('#isWrapped').click();
+            }
+            localStorage.setItem('wrapped',''+wrapped);
+
+            $('#wrapped').change(function() {
+                wrapped = $('#isWrapped:checked').length > 0;
+                //console.log('wrapped->', wrapped);
+                $.qgcidm.config.wrapped = wrapped;
+                localStorage.setItem('wrapped',''+wrapped);
+                // call initialize to set the widget type
+                $.qgcidm.initialise();
+            });
+
+
+            // the level persisted to local storage
+
+            $('#level>input').checkboxradio();
+
+            var level = localStorage.getItem('level');
+            //console.log('level=',level);
+            if (level != null && (level == 'Level_1' || level == 'Level_2')) {
+                $('#'+level).click();
+            }
+            else {
+                level = 'Level_1';
+                $('#Level_1').click();
+            }
+            localStorage.setItem('level', level);
+
+            $('#level').change(function() {
+                level = $('#level>input:checked').attr('id');
+                //console.log('level->', level);
+                $.qgcidm.config.level = level;
+                // call initialise to set the level required
+                localStorage.setItem('level',level);
+                $.qgcidm.initialise();
+            });
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////
+            //____________________________________________________________________________________________________
+            // this is the way that you would initialize the QGCIDM NEO widget
+
+            $.qgcidm.initialise({
+                home: 'https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355',
+                domain: 'None.qld-gov-dev.auth0.com',
+                clientID: 'None',
+                webtaskHome: 'webtask.qld-gov-dev.auth0.com/api/run/None',
+                level: level,
+                wrapped: wrapped,
+                hub: 'https://test-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_20170926T163355/hub.html',
+                returnTo: window.location.href.replace('index.html','callback.html'),
+                faq: "https://identity.qld.gov.au/help/faq.html",
+                about: "https://www.my.qld.gov.au/intro/index.html",
+                myaccount: "https://www.my.qld.gov.au"
+            });
+
+            //____________________________________________________________________________________________________
+            // this step tags the avatar div tag with the login/logout and name/icon widget
+
+            $('#avatar').avatar(); // make the id=avatar an avatar for the login widget
+
+            //====================================================================================================
+            // this step enables the profile widget and renders the widget
+
+            $.qgcidm.enable();
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        // this section below is for testing purposes and not part of the usual NEO install
+
+            // the update container is for testing purposes only
+
+            $('#updateContainer').hide();
+            $('#squishme').accordion({
+                heightStyle: "content",
+                collapsible: true,
+                active: false
+            });
+
+            //____________________________________________________________________________________________________
+            //
+
+            //____________________________________________________________________________________________________
+            // this is a test function to allow the testor to set the level
+
+            //====================================================================================================
+            //
+
+            $('#changePwd').attr('href','https://' + $.qgcidm.config.webtaskHome + '/ChangePassword/forgot?bk=' + window.location.href);
+
+            $('#squishme').find('button').button();
+            $('#squishme').find('input[type=button]').button();
+
+            // for testing purposes this stepup button can be used to force a step up login sequence
+            $('#stepup').click(function(e) {
+                e.preventDefault();
+                $('#Level_2').click();
+                if ($.qgcidm.config.wrapped) {
+                    window.location.href = $.qgcidm.getLoginURL();
+                }
+                else {
+                    $.qgcidm._lock.show();
+                }
+            });
+
+            //____________________________________________________________________________________________________
+            // monitor the local storage
+
+            $('#token_expiry')
+                .val($.qgcidm._token_expires/60000)
+                .change(function() {
+                    var now = new Date();
+                    var time = parseInt($(this).val())*60000;
+                    $.qgcidm.setStorage('started', now.toISOString(), function() {
+                        $.qgcidm._token_expires = time;
+                        //console.log('token expiry time=',time);
+                    });
+                });
+            ;
+            $('#session_expiry')
+                .val($.qgcidm._session_expires/60000)
+                .change(function() {
+                    var time = parseInt($(this).val())*60000;
+                    var now = new Date();
+                    $.qgcidm.setStorage('modified', now.toISOString(), function() {
+                        $.qgcidm._session_expires = time;
+                        //console.log('session expiry time=',time);
+                    });
+                });
+            ;
+
+            function updateStatus() {
+                var now = new Date();
+                $.qgcidm.getStorage('started', function(started) {
+                    if (started !== null) {
+                        $('#started').val(started.substring(0,19));
+                        var then = Date.parse(started);
+                        var delta = then + $.qgcidm._token_expires - now;
+                        var expires = new Date(delta);
+                        $('#token_expires').val(expires.toISOString().substring(11,11+8));
+                    }
+                });
+                $.qgcidm.getStorage('modified', function(modified) {
+                    if (modified !== null) {
+                        $('#modified').val(modified.substring(0,19));
+                        var then = Date.parse(modified);
+                        var delta = then + $.qgcidm._session_expires - now;
+                        var expires = new Date(delta);
+                        $('#session_expires').val(expires.toISOString().substring(11,11+8));
+                    }
+
+                });
+
+                $('#now').val(now.toISOString().substring(0,19));
+                $('#activity').val($.qgcidm._counter);
+
+                var tick = localStorage.getItem('tick');
+                if (tick !== null) {
+                    var then = Date.parse(tick);
+                    var delta = then + $.qgcidm._tick - now;
+                    var next = new Date(delta);
+                    $('#next_tick').val(next.toISOString().substring(11,11+8));
+                }
+                else {
+                    $('#next_tick').val('');
+                }
+
+                setTimeout(updateStatus, 1000);
+            }
+            updateStatus();
+
+            //====================================================================================================
+            // An optional capabilitiy the ability to hook into the onLogin or onLogout callback chain
+
+            $('#profile')
+                .onLogin(function(me) {
+                    // the #profile tag holds a view of the users profile == me
+                    $(me).show();
+                    // remove any tags inside the current profile
+                    $('#profile').find('*').remove();
+                    // populate the profile div tag with the QGCIDM user profile
+                    $('#profile').expando($.qgcidm.profile);
+                    $('#updateContainer').show();
+                })
+                .onLogout(function(me) {
+                    // hide the profile div tag
+                    $(me).hide();
+                    $('#updateContainer').hide();
+                });
+
+            // if the user is already logged in this step will show their profile
+            $('#profile').find('*').remove();
+            $('#profile').expando($.qgcidm.profile);
+        });
+
+        //====================================================================================================
+        // end of test section
+
+    });
+});
+
+    </script>
+
+
+    <!-- ==================================================================================================== -->
+    <h1>The Profile Widget avatar</h1>
+    <p>The profile below in gray is the widget that is embedded in an agency site. It is managed by CIDM NEO and populated dynamically</p>
+    <!-- this div tag will contain the login/logout widget when loaded with jQuery -->
+    <div id="avatar" style="text-align:right;width:100%;background:gray;"></div>
+
+    <!-- ==================================================================================================== -->
+
+    <br/>
+    <br/>
+    <hr/>
+
+    <div class="widget" style="width:100%;">
+      <h1>Login Configuration</h1>
+
+      <!-- select drop down list to select the Wrapped widget or NEO widget -->
+      <fieldset id="wrapped" style="display:inline-block;">
+        <legend>Login Type</legend>
+        <label for="isWrapped">Wrapped</label>
+        <input type="radio" name="wrapped" id="isWrapped"/>
+        <label for="isNEO">NEO</label>
+        <input type="radio" name="wrapped" id="isNEO"/>
+      </fieldset>
+
+      <!-- select drop down list to allow the tester to select which level they want to use -->
+      <fieldset id="level" style="display:inline-block;">
+        <legend>Choose the Level</legend>
+        <label for="Level_1">Level 1</label>
+        <input type="radio" name="level" id="Level_1"/>
+        <label for="Level_2">Level 2</label>
+        <input type="radio" name="level" id="Level_2"/>
+      </fieldset>
+
+    </div>
+
+    <br/>
+
+    <table border="1">
+      <tr>
+        <td>
+         <legend>Token Started</legend>
+         <input type="text" id="started" style="width:95%"/>
+       </td>
+       <td>
+         <legend>Token Expires in</legend>
+         <input type="text" id="token_expires" style="width:95%"/>
+       </td>
+       <td>
+         <legend>Token Expiry Minutes</legend>
+         <input type="text" id="token_expiry" style="width:95%"/>
+       </td>
+     </tr>
+
+     <tr>
+       <td>
+         <legend>Last Activity</legend>
+         <input type="text" id="modified" style="width:95%"/>
+       </td>
+       <td>
+         <legend>Session Expires in</legend>
+         <input type="text" id="session_expires" style="width:95%"/>
+       </td>
+       <td>
+         <legend>Session Expiry Minutes</legend>
+         <input type="text" id="session_expiry" style="width:95%"/>
+       </td>
+     </tr>
+
+     <tr>
+       <td>
+         <legend>Time Now</legend>
+         <input type="text" id="now" style="width:95%"/>
+       </td>
+       <td>
+        <legend>Next Tick</legend>
+         <input type="text" id="next_tick" style="width:95%"/>
+       </td>
+       <td>
+        <legend>Activity Count</legend>
+         <input type="text" id="activity" style="width:95%"/>
+       </td>
+     </tr>
+     </table>
+
+     <!-- ==================================================================================================== -->
+
+    <div id="updateContainer">
+       <h1>Test Harness Functions</h1>
+       <p>The following services are for testing purposes only, they are not shown to end users.</p>
+
+      <div id="squishme">
+        <h2>Step Up</h2>
+        <div>
+          <!-- button to force a step up login -->
+          <button id="stepup">Step Up</button>
+        </div>
+
+        <h2>Update Mobile Number</h2>
+        <!-- update mobile number service -->
+        <div>
+          <span>New Mobile ? </span>
+          <input type="text" id="mobile" />
+          <input type="button" onclick="changeMobile()" value="update" />
+        </div>
+
+        <h2>Change Password</h2>
+        <!-- change password feature -->
+        <div>
+          <a id="changePwd" target="_blank">Change Password</a>
+        </div>
+
+        <h2>Change Username/email</h2>
+        <div>
+            <div id="emailDiv">
+                  <span>Update email : </span>
+                  <input type="text" id="emailAddr" placeholder="Email"/>
+                  <input type="password" id="pwd" placeholder="password"/>
+                  <input type="button" onclick="changeEmail()" value="update email" />
+                  <input type="hidden" id="reference"/>
+              </div>
+              <div id="codeDiv">
+                    <span>Verify Code : </span>
+                    <input type="text" id="code" placeholder="Code"/>
+                    <input type="button" onclick="verifyCode()" value="Verify" />
+              </div>
+        </div>
+
+        <h2>Delete User</h2>
+        <div>
+          <input type="text" id="deleteUser" placeholder="Email of a user to delete"/>
+          <input type="button" onclick="deleteUser()" value="Delete User" />
+        </div>
+
+      </div>
+
+    </div>
+
+    <hr/>
+    <h1>Current User Profile</h1>
+    <p>When the user is logged in their profile is availble in the browser cache. It is displayed here for diagnostic purposes only.</p>
+    <!-- this div tag will hold the users profile when they are logged in -->
+    <div id="profile"></div>
+    <div id="dialog" title=" About NEO" hidden="hidden">
+      <p><a href="https://www.qld.gov.au/dsiti/" target="_blank">Help link</a></p>
+    </div>
+
+  </body>
+
+</html>
