@@ -272,44 +272,134 @@ requirejs(['https://dev-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_2017
 
     </script>
 
-
     <!-- ==================================================================================================== -->
-    <h1>The Profile Widget avatar</h1>
-    <p>The profile below in gray is the widget that is embedded in an agency site. It is managed by CIDM NEO and populated dynamically</p>
+    <h1>CI&amp;DM NEO Test Harness</h1>
+    <p>Welcome to the CI&amp;DM Test Harness. The purpose of this webpage is to explore functionality provided by CI&DM and to conduct User Acceptance Testing.</p>
+    <p>The grey bar below is the widget embedded in an agency website. Prior to clicking on the avatar, you will need to choose to your sign-in configuration (select login type and level). Once you have selected the  sign-in configuration, click on the avatar and select the “Sign in/Create” button. To sign out, click on the avatar and click the “Sign out” button.</p>
+
     <!-- this div tag will contain the login/logout widget when loaded with jQuery -->
     <div id="avatar" style="text-align:right;width:100%;background:gray;"></div>
 
     <!-- ==================================================================================================== -->
 
     <br/>
-    <br/>
     <hr/>
 
     <div class="widget" style="width:100%;">
-      <h1>Login Configuration</h1>
+      <h1>Sign-in Configuration</h1>
 
-      <!-- select drop down list to select the Wrapped widget or NEO widget -->
-      <fieldset id="wrapped" style="display:inline-block;">
-        <legend>Login Type</legend>
-        <label for="isWrapped">Wrapped</label>
-        <input type="radio" name="wrapped" id="isWrapped"/>
-        <label for="isNEO">NEO</label>
-        <input type="radio" name="wrapped" id="isNEO"/>
-      </fieldset>
-
-      <!-- select drop down list to allow the tester to select which level they want to use -->
-      <fieldset id="level" style="display:inline-block;">
-        <legend>Choose the Level</legend>
-        <label for="Level_1">Level 1</label>
-        <input type="radio" name="level" id="Level_1"/>
-        <label for="Level_2">Level 2</label>
-        <input type="radio" name="level" id="Level_2"/>
-      </fieldset>
-
+      <table border="1">
+        <col width="300">
+        <!-- <col width="300"> -->
+        <tr>
+          <td style="padding-left:10px">
+            <!-- select drop down list to select the Wrapped widget or NEO widget -->
+            <fieldset id="wrapped" style="display:inline-block;">
+              <legend>Login Type</legend>
+              <label for="isWrapped">Wrapped</label>
+              <input type="radio" name="wrapped" id="isWrapped"/>
+              <label for="isNEO">NEO</label>
+              <input type="radio" name="wrapped" id="isNEO"/>
+            </fieldset>
+          </td>
+          <td style="padding-left:10px">
+            <p>
+              Wrapped – Auth0 authentication broker service using tokens which wraps the CIDM SAML  solution  that provides authentication capability up to level 2
+            </p>
+            <p>
+              NEO – Auth0 authentication broker service using tokens that only provides a level 1 authentication capability.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-left:10px">
+            <!-- select drop down list to allow the tester to select which level they want to use -->
+            <fieldset id="level" style="display:inline-block;">
+              <legend>Choose the Level</legend>
+              <label for="Level_1">Level 1</label>
+              <input type="radio" name="level" id="Level_1"/>
+              <label for="Level_2">Level 2</label>
+              <input type="radio" name="level" id="Level_2"/>
+            </fieldset>
+          </td>
+          <td style="padding-left:10px">
+            <p>
+              Level 1 service – An agency service which requires an anonymous user to sign-in to access the service
+            </p>
+            <p>
+              Level 2 service – An agency service which requires the customer to authenticate with a strong credential  and have proved their identity to access the service. If a customer authenticates with a weak credential (i.e. social account), they will be prompted to Step Up.
+            </p>
+          </td>
+        </tr>
+      </table>
     </div>
 
-    <br/>
+     <!-- ==================================================================================================== -->
 
+     <br/>
+     <hr />
+
+     <div id="updateContainer">
+       <h1>Maintenance Functions</h1>
+       <p>The following services are for testing purposes only, they are not shown to end users.</p>
+
+       <div id="squishme">
+
+        <h2>Update Mobile Number</h2>
+        <!-- update mobile number service -->
+        <div>
+          <p>This function will update the mobile number linked to the Queensland Government sign-in. For testing purposes, SMS verification to confirm the updated mobile number has been turned off.</p>
+          <span>New Mobile ? </span>
+          <input type="text" id="mobile" />
+          <input type="button" onclick="changeMobile()" value="update" />
+        </div>
+
+        <h2>Change Password</h2>
+        <!-- change password feature -->
+        <div>
+          <p>This function will update the password the customer uses to log into their Queensland Government sign-in.</p>
+          <a id="changePwd" target="_blank">Change Password</a>
+        </div>
+
+        <h2>Change Username/email</h2>
+        <div>
+            <p>This function will update the email address the customer uses to log into their Queensland Government sign-in.</p>
+            <div id="emailDiv">
+                  <span>Update email : </span>
+                  <input type="text" id="emailAddr" placeholder="Email"/>
+                  <input type="password" id="pwd" placeholder="password"/>
+                  <input type="button" onclick="changeEmail()" value="update email" />
+                  <input type="hidden" id="reference"/>
+              </div>
+              <div id="codeDiv">
+                    <span>Verify Code : </span>
+                    <input type="text" id="code" placeholder="Code"/>
+                    <input type="button" onclick="verifyCode()" value="Verify" />
+              </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================================================== -->
+
+    <br/>
+    <hr/>
+
+    <h1>Current User Profile</h1>
+    <p>When signed in, the user profile is displayed below for diagnostic purposes only.</p>
+    <!-- this div tag will hold the users profile when they are logged in -->
+    <div id="profile"></div>
+    <div id="dialog" title=" About NEO" hidden="hidden">
+      <p><a href="https://www.qld.gov.au/dsiti/" target="_blank">Help link</a></p>
+    </div>
+
+    <!-- ==================================================================================================== -->
+
+    <br/>
+    <hr />
+
+    <h1>Token/Session Activity</h1>
+    <p>The below table includes Token/Session activity details. The fields “Token Expiry Minutes” and “Session Expires In” are both configurable.</p>
     <table border="1">
       <tr>
         <td>
@@ -356,68 +446,6 @@ requirejs(['https://dev-static.qgov.net.au/assets/widget/CIDM/profile/3.0.3_2017
        </td>
      </tr>
      </table>
-
-     <!-- ==================================================================================================== -->
-
-    <div id="updateContainer">
-       <h1>Test Harness Functions</h1>
-       <p>The following services are for testing purposes only, they are not shown to end users.</p>
-
-      <div id="squishme">
-        <h2>Step Up</h2>
-        <div>
-          <!-- button to force a step up login -->
-          <button id="stepup">Step Up</button>
-        </div>
-
-        <h2>Update Mobile Number</h2>
-        <!-- update mobile number service -->
-        <div>
-          <span>New Mobile ? </span>
-          <input type="text" id="mobile" />
-          <input type="button" onclick="changeMobile()" value="update" />
-        </div>
-
-        <h2>Change Password</h2>
-        <!-- change password feature -->
-        <div>
-          <a id="changePwd" target="_blank">Change Password</a>
-        </div>
-
-        <h2>Change Username/email</h2>
-        <div>
-            <div id="emailDiv">
-                  <span>Update email : </span>
-                  <input type="text" id="emailAddr" placeholder="Email"/>
-                  <input type="password" id="pwd" placeholder="password"/>
-                  <input type="button" onclick="changeEmail()" value="update email" />
-                  <input type="hidden" id="reference"/>
-              </div>
-              <div id="codeDiv">
-                    <span>Verify Code : </span>
-                    <input type="text" id="code" placeholder="Code"/>
-                    <input type="button" onclick="verifyCode()" value="Verify" />
-              </div>
-        </div>
-
-        <h2>Delete User</h2>
-        <div>
-          <input type="text" id="deleteUser" placeholder="Email of a user to delete"/>
-          <input type="button" onclick="deleteUser()" value="Delete User" />
-        </div>
-
-      </div>
-
-    </div>
-
-    <hr/>
-    <h1>Current User Profile</h1>
-    <p>When the user is logged in their profile is availble in the browser cache. It is displayed here for diagnostic purposes only.</p>
-    <!-- this div tag will hold the users profile when they are logged in -->
-    <div id="profile"></div>
-    <div id="dialog" title=" About NEO" hidden="hidden">
-      <p><a href="https://www.qld.gov.au/dsiti/" target="_blank">Help link</a></p>
-    </div>
 
   </body>
 
