@@ -1,4 +1,158 @@
 function changeMobile() {
+    checkUser_mobile();
+}
+
+function checkUser_mobile()
+{
+    var params = {
+        'email': $.qgcidm.profile.email,
+        'client': $.qgcidm.config.clientID
+    };
+    // check user
+    var checkUserSettings = {
+        'async': true,
+        'crossDomain': true,
+        'url': 'https://' + $.qgcidm.config.webtaskHome + '/CheckUser',
+        'method': 'POST',
+        'headers': {
+            'content-type': 'application/x-www-form-urlencoded'
+        },
+        'data': params
+    };
+
+    console.log('In checkUser_mobile');
+    console.log(params);
+    console.log(checkUserSettings);
+
+    $.ajax(checkUserSettings).done(function(response) {
+        if(response != "true")
+        {
+            console.log(response);
+            sendCode_mobile();
+        }
+    }).fail(function(error) {
+        alert( error.responseText );
+    });
+}
+
+function sendCode_mobile()
+{
+    var delivery = 'sms';
+
+    // Send confirmation code viaSMS
+    if (delivery === 'sms') {
+
+        var params = {
+            'phone': $.qgcidm.profile.phone,
+            'client': $.qgcidm.config.clientID
+        };
+        // send code
+        var sendCodeSettings =
+            {
+                "async": true,
+                "crossDomain": true,
+                "url": 'https://' + $.qgcidm.config.webtaskHome + '/ChangeMobile/sendsmscode',
+                "method": "POST",
+                "headers":
+                    {
+                        "content-type": "application/json",
+                    },
+                "data": JSON.stringify(params)
+            };
+
+        console.log('In sendCode_mobile via sms');
+        console.log(params);
+        console.log(sendCodeSettings);
+
+        $.ajax(sendCodeSettings).done(function(response) {
+            console.log("response.ref")
+            console.log(response.ref);
+            $('#reference_mobile').val(response.ref);
+            $("#codeDiv_mobile").show();
+
+            alert('Code Sent');
+        }).fail(function(error) {
+            alert( error.responseText );
+            $("#codeDiv_mobile").hide();
+        });
+
+
+    } else {
+
+        // Send confirmation code via email
+        var params = {
+            'mailTo': $.qgcidm.profile.email,
+            'client': $.qgcidm.config.clientID,
+            'template': 'changeMobileEmail'
+        };
+        // send code
+        var sendCodeSettings =
+            {
+                "async": true,
+                "crossDomain": true,
+                "url": 'https://' + $.qgcidm.config.webtaskHome + '/SendMail',
+                "method": "POST",
+                "headers":
+                    {
+                        "content-type": "application/json",
+                    },
+                "data": JSON.stringify(params)
+            };
+
+        console.log('In sendCode_mobile via email');
+        console.log(params);
+        console.log(sendCodeSettings);
+
+        $.ajax(sendCodeSettings).done(function(response) {
+            $('#reference_mobile').val(response.ref);
+            $("#codeDiv_mobile").show();
+
+            alert('Code Sent');
+        }).fail(function(error) {
+            alert( error.responseText );
+            $("#codeDiv_mobile").hide();
+        });
+
+    }
+}
+
+function verifyCode_mobile()
+{
+    var params = {
+        "ref": $('#reference_mobile').val(),
+        "code": $('#Code_mobile').val()
+    };
+    var verifyCodeSettings =
+        {
+            "async": true,
+            "crossDomain": true,
+            "url": 'https://' + $.qgcidm.config.webtaskHome + '/SendMail/checkCode',
+            "method": "POST",
+            "headers":
+                {
+                    "content-type": "application/json",
+                },
+            "data": JSON.stringify(params)
+        };
+
+    console.log('In verifyCode_mobile');
+    console.log(params);
+    console.log(verifyCodeSettings);
+
+    $.ajax(verifyCodeSettings).done(function(response) {
+        if(response.success === true || response.success === "true")
+        {
+            updateMobile();
+        }
+        else {
+            alert("invalid code");
+        }
+    }).fail(function(error) {
+        alert( error.responseText );
+    });
+}
+
+function updateMobile() {
     $.qgcidm.getStorage('id_token', function(id_token) {
         //alert(id_token);
         if ($.qgcidm.profile.identities[0].provider != "auth0") {
@@ -24,12 +178,50 @@ function changeMobile() {
             }
 
             $.ajax(settings).done(function(response) {
-                $.qgcidm.updateProfile(function() {
-                    alert('Phone number changed to '+$.qgcidm.profile.app_metadata.phone);
-                    window.location.reload();
-                });
+                if (response.success === "Mobile number updated") {
+
+                    sendMobileChangedEmail();
+
+                    $.qgcidm.updateProfile(function() {
+                        alert('Phone number changed to '+$.qgcidm.profile.app_metadata.phone);
+                        window.location.reload();
+                    });
+                }
             });
         }
+    });
+}
+
+function sendMobileChangedEmail()
+{
+    var params = {
+        'mailTo': $.qgcidm.profile.email,
+        'client': $.qgcidm.config.clientID,
+        'template': 'changeMobileNotificationEmail'
+    };
+    // send code
+    var sendCodeSettings =
+        {
+            "async": true,
+            "crossDomain": true,
+            "url": 'https://' + $.qgcidm.config.webtaskHome + '/SendMail',
+            "method": "POST",
+            "headers":
+                {
+                    "content-type": "application/json",
+                },
+            "data": JSON.stringify(params)
+        };
+
+    console.log(params);
+    console.log(sendCodeSettings);
+
+    $.ajax(sendCodeSettings).done(function(response) {
+        config.logger.debug();
+        alert('A notification email has been sent to your email address.');
+    }).fail(function(error) {
+        config.logger.error(error.responseText);
+        alert( error.responseText );
     });
 }
 
@@ -125,7 +317,7 @@ function sendCode()
         "data": JSON.stringify(params)
     };
     $.ajax(sendCodeSettings).done(function(response) {
-        $('#reference').val(response);
+        $('#reference').val(response.ref);
         $("#emailDiv").hide();
         $("#codeDiv").show();
 
@@ -156,15 +348,16 @@ function verifyCode()
         "data": JSON.stringify(params)
     };
     $.ajax(verifyCodeSettings).done(function(response) {
-        if(response === "true")
+        if(response.success === true || response.success === "true")
         {
             authenticate($('#pwd').val());
         }
         else {
-            alert("invalid code");
+            alert("Invalid code");
         }
     }).fail(function(error) {
-        alert( error.responseText );
+        var errorObj = JSON.parse(error.responseText);
+        alert(errorObj.message);
     });
 }
 
@@ -200,11 +393,15 @@ function authenticate(password) {
                 }
 
                 $.ajax(settings).done(function(response) {
-                    alert('Email changed.');
+                    alert(response.result);
                     $("#emailDiv").show();
                     $("#codeDiv").hide();
                     $("#emailAddr").val("");
                     $("#pwd").val("");
+
+                    // Log user out after successful email change
+                    $.qgcidm.logout();
+
                 }).fail(function(error) {
                     alert( error.responseText );
                 });
