@@ -78,13 +78,29 @@ requirejs(['https://test-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0/js/
             $.qgcidm.initialise({
                 home: 'https://test-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0',
                 domain: 'tst.qld-gov-dev.auth0.com',
-                clientID: 'WfLIDq2RY5J6C66vcRsAhmbQVqgZfcBx',
+                attributes_api:'https://api-customer-attributes.identity.test-services.qld.gov.au/v1',
+                x_api_key:'SA5ODrkkdd6YfWbDbATY4FsSimIbXUw8t6kJ6Vhc',
+                clientID: 'WfLIDq2RY5J6C66vcRsAhmbQVqgZfcBx', // DEV Ku1lxMkBQWcCDLquCPC5zosW1vhRMkoZ
                 level: level,
                 hub: 'https://sso-tst.identity.staging-services.qld.gov.au/hub.html',
                 returnTo: window.location.href.replace('index.html','callback.html'),
                 faq: "https://identity.qld.gov.au/help/faq.html",
                 about: "https://www.my.qld.gov.au/intro/index.html",
-                myaccount: "https://www.my.qld.gov.au"
+                myaccount: "https://www.my.qld.gov.au",
+                authoritative_attributes: {
+                    QID:false,
+                    DateOfBirth:false,
+                    Email:true
+                },
+                self_asserted_attributes: {
+                    Name:true,
+                    UserId:false,
+                    AuthenticationMethod:false,
+                    Picture:true,
+                    FirstName:false,
+                    FamilyName:false,
+                    Nickname:true
+                }
             });
 
             //____________________________________________________________________________________________________
