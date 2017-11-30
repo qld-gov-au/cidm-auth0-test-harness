@@ -78,8 +78,8 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0/js/
             $.qgcidm.initialise({
                 home: 'https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0',
                 domain: 'uat.qld-gov-dev.auth0.com',
-                attributes_api:'https://api-customer-attributes.identity.staging-services.qld.gov.au/v1',
-                x_api_key:'xk8QUcLnlj4owU5KKeEqN4vFAJM5OXR53JmNfO6w',
+                attributes_api_url:'https://api-customer-attributes.identity.staging-services.qld.gov.au/v1',
+                attributes_api_key:'xk8QUcLnlj4owU5KKeEqN4vFAJM5OXR53JmNfO6w',
                 clientID: '8aqIFVFNrhpws8dv3W5C3FANUMfiqzK7', 
                 level: level,
                 hub: 'https://sso-uat.identity.staging-services.qld.gov.au/hub.html',
@@ -88,18 +88,20 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0/js/
                 about: "https://www.my.qld.gov.au/intro/index.html",
                 myaccount: "https://www.my.qld.gov.au",
                 authoritative_attributes: {
-                    QID:false,
-                    DateOfBirth:false,
-                    Email:true
+                    QID:true,
+                    DateOfBirth:true,
+                    Email:true,
+                    UserId:true,
+                    AuthenticationMethod:true,
+                    FirstName:true,
+                    FamilyName:true
                 },
                 self_asserted_attributes: {
                     Name:true,
-                    UserId:false,
-                    AuthenticationMethod:false,
                     Picture:true,
-                    FirstName:false,
-                    FamilyName:false,
-                    Nickname:true
+                    FirstName:true,
+                    FamilyName:true
+                    //Nickname:true
                 }
             });
 
@@ -195,7 +197,10 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0/js/
                     // remove any tags inside the current profile
                     $('#profile').find('*').remove();
                     // populate the profile div tag with the QGCIDM user profile
-                    $('#profile').expando($.qgcidm.profile);
+                    for(var i = 0; i < $.qgcidm.profile.attributes.length; i++){
+                        $('#profile').append('<ul><li>' + $.qgcidm.profile.attributes[i].name + ': ' + $.qgcidm.profile.attributes[i].value + '</li></ul>')
+                    }
+                    //$('#profile').expando($.qgcidm.profile.attributes);
                     $('#updateContainer').show();
                 })
                 .onLogout(function(me) {
@@ -203,10 +208,6 @@ requirejs(['https://beta-static.qgov.net.au/assets/widget/CIDM/profile/2.1.0/js/
                     $(me).hide();
                     $('#updateContainer').hide();
                 });
-
-            // if the user is already logged in this step will show their profile
-            $('#profile').find('*').remove();
-            $('#profile').expando($.qgcidm.profile);
         });
 
         //====================================================================================================
